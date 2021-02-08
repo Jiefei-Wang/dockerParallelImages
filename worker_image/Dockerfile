@@ -1,6 +1,6 @@
-FROM r-base:4.0.3
+FROM docker.io/bioconductor/bioconductor_docker:RELEASE_3_12
 RUN apt-get update \
 	&& apt-get install -y openssh-server
-COPY bash_commands /
+COPY . /
 WORKDIR /workspace
-CMD bash /bash_commands
+CMD bash /worker_commands
