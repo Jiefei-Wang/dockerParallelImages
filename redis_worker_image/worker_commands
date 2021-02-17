@@ -1,32 +1,6 @@
 #!/bin/bash
-## Add the public key if exists
-mkdir ~/.ssh
-if test -n "${pubKey-}"; then
-  echo "Public key is found"
-  echo ${pubKey}>> ~/.ssh/authorized_keys
-else
-  echo "Public key is not found"
-fi
-service ssh start
-
-
-
-
-
-## Check if the R worker process is running
-wait_before_worker_run=600
-wait_after_worker_stopped=5
-counter=1
-while [ $counter -le $wait_before_worker_run ]
-do
-if pgrep -x "R" > /dev/null
-then
-    echo 'worker found'
-    let counter=$wait_before_worker_run-$wait_after_worker_stopped
-else
-    echo 'worker not found'
-fi
-sleep 1
-((counter++))
-done
+## Run ssh server
+bash ./start_sshd
+## Run worker
+Rscript ./worker.R
 

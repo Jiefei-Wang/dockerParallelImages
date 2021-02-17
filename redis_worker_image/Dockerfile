@@ -1,6 +1,8 @@
 FROM docker.io/bioconductor/bioconductor_docker:RELEASE_3_12
-RUN apt-get update \
-	&& apt-get install -y openssh-server redis-server libhiredis-dev
-COPY . /
 WORKDIR /workspace
-CMD bash /worker_commands
+RUN apt-get update \
+	&& apt-get install -y openssh-server libhiredis-dev
+COPY install-deps.R /workspace
+RUN Rscript install-deps.R
+COPY . /workspace
+CMD bash /workspace/worker_commands
