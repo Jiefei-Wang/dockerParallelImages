@@ -10,6 +10,9 @@ fi
 service ssh start
 
 
+
+
+
 ## Check if the R worker process is running
 wait_before_worker_run=600
 wait_after_worker_stopped=5
