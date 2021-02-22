@@ -26,6 +26,7 @@ The worker image accept the following environment variable on startup:
 3. redisServer: The IP of the redis server(default: localhost)
 4. redisPort: The port used by the redis server to accept the incoming connection(default: 6379)
 5. redisPassword: The password of the redis server
+6. workerNum: The number of R workers in the container
 
 
 To build
@@ -34,11 +35,11 @@ docker build -t redis_worker_image redis_worker_image/.
 ```
 To run
 ```
-docker run -it --env redisQueue=jobs --env redisPassword=123456 redis_worker_image
+docker run -it --env redisQueue=jobs --env redisPassword=123456 --env workerNum=2 redis_worker_image
 ```
 
 ## Note
 If you want to test the server and the worker on the same machine, you have to allow the connection from the container to the host machine. For example
 ```
-docker run -it --env redisQueue=jobs --env redisServer=localhost --env redisPort=6666 --env redisPassword=123456 --network="host" redis_worker_image
+docker run -it --env redisQueue=jobs --env redisServer=localhost --env redisPort=6666 --env redisPassword=123456 --env workerNum=2 --network="host" redis_worker_image
 ```

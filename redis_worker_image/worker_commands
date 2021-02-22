@@ -1,6 +1,36 @@
 #!/bin/bash
+
 ## Run ssh server
 bash ./start_sshd
-## Run worker
-Rscript ./worker.R
 
+## Check the environment variables
+if [ ! -z ${workerNum+x} ]
+then 
+    echo "worker number is set to $workerNum"
+else 
+    echo "The environment variable 'workerNum' is not set, use the default value 1"
+    workerNum=1
+fi
+
+## Run workers
+for ((n=0;n<${workerNum};n++)); do
+    export workerId=$n
+    Rscript ./worker.R&
+done
+
+## Check if the R workers are running
+workers=1
+while [ $workers -gt 0 ]
+do
+    ## I do not know why but if I remove this line
+    ## the variable workers is a constant 1 after all
+    ## R workers exit
+    jobs &> /dev/null
+    workers=$(jobs|wc -l)
+    echo "Current alive worker number: ${workers}"
+    sleep 1
+done
+
+
+echo "The container will exit after 5 seconds"
+sleep 5

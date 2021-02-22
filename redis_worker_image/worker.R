@@ -1,9 +1,11 @@
-library(doRedis)
+suppressMessages(library(doRedis))
 
+workerId <- Sys.getenv("workerId")
 queue <- NULL
 host <- "localhost"
 port <- 6379
 password <- NULL
+
 
 if(Sys.getenv("redisQueue")!=""){
   queue <- Sys.getenv("redisQueue")
@@ -20,11 +22,20 @@ if(Sys.getenv("redisPassword")!=""){
   password <- Sys.getenv("redisPassword")
 }
 
-message("Queue: ", queue)
-message("Server: ", host)
-message("Port: ", port)
-message("password: ", ifelse(!is.null(password),"set", "not set"))
-redisWorker(queue, host = host, port = port, password = password)
+if(workerId==0){
+  message("Queue: ", queue)
+  message("Server: ", host)
+  message("Port: ", port)
+  message("password: ", ifelse(!is.null(password),"set", "not set"))
+}
+
+tryCatch(
+  redisWorker(queue, host = host, port = port, password = password),
+  error=function(e){
+    message(paste0("Worker ", workerId, " reports error:\n", e$message))
+  }
+)
+
 
 
 
