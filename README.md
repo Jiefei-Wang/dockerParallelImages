@@ -21,12 +21,13 @@ docker run -it --env redisPort=6379 --env redisPassword=123456 -p 6666:6379 redi
 The worker image accept the following environment variable on startup:
 
 
-1. sshPubKey: The ssh public key
-2. redisQueue: the queue name used by the worker to retrive jobs from the server
-3. redisServer: The IP of the redis server(default: localhost)
-4. redisPort: The port used by the redis server to accept the incoming connection(default: 6379)
-5. redisPassword: The password of the redis server
-6. workerNum: The number of R workers in the container
+1. workerNum: The number of R workers in the container
+2. sshPubKey: The ssh public key
+3. redisQueue: the queue name used by the worker to retrive jobs from the server
+4. redisServer: The IP of the redis server(default: localhost)
+5. redisPort: The port used by the redis server to accept the incoming connection(default: 6379)
+6. redisPassword: The password of the redis server
+7. redisTimeout: The max wait time in seconds until the Redis connection fails(default: 60s)
 
 
 To build
