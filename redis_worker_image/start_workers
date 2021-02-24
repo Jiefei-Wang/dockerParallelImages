@@ -33,7 +33,7 @@ do
     if [[ $doneWorkers -ge $workerNum ]]; then
         break
     fi
-    if [[ $runningWorkers -ge $workerNum ]]; then
+    if [[ $workerId -ge $workerNum ]]; then
         sleep 1
     fi
 done
