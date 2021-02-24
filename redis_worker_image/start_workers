@@ -8,25 +8,35 @@ else
     workerNum=1
 fi
 
-## Run workers
-for ((n=0;n<${workerNum};n++)); do
-    export workerId=$n
-    Rscript ./worker.R&
-done
 
-## Check if the R workers are running
-workers=1
-while [ $workers -gt 0 ]
+## make done folder
+mkdir doneWorkers
+
+## Run workers until all workers are done
+workerId=0
+runningWorkers=0
+doneWorkers=0
+while true
 do
-    ## I do not know why but if I remove this line
-    ## the variable workers is a constant 1 after all
-    ## R workers exit
     jobs &> /dev/null
-    workers=$(jobs|wc -l)
-    echo "Current alive worker number: ${workers}"
-    sleep 1
+    runningWorkers=$(jobs|wc -l)
+    doneWorkers=$(ls doneWorkers|wc -w)
+    if (( runningWorkers + doneWorkers != workerNum ));then
+        let workerId++
+        export workerId
+        Rscript ./worker.R&
+    fi
+    echo "running workers : ${runningWorkers}, done: ${doneWorkers}"
+    if [[ $workerId -gt 1000 ]]; then
+        break
+    fi
+    if [[ $doneWorkers -ge $workerNum ]]; then
+        break
+    fi
+    if [[ $runningWorkers -ge $workerNum ]]; then
+        sleep 1
+    fi
 done
 
-
-echo "The container will exit after 5 seconds"
-sleep 5
+echo "The container will exit after 10 seconds"
+sleep 10

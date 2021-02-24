@@ -55,6 +55,7 @@ while (as.numeric(Sys.time() - time1, "secs") < timeout && !success) {
 ## quit message
 if (success) {
   message(paste0("Worker ", workerId, " exits successfully"))
+  file.create(paste0("doneWorkers/", workerId))
 } else {
   message(paste0("Worker ", workerId, " reports error:\n", error$message))
 }
